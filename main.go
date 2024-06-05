@@ -1,8 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -37,7 +39,7 @@ var orders = []order{
 	},
 }
 
-// c *gin.Context - tipo o req e res
+// c *gin.Context - similar ao req e res
 func getOrders(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, orders)
 }
@@ -58,15 +60,16 @@ func buildOrder(orderData order) order {
 func postOrders(c *gin.Context) {
 	var orderData order
 
-	// BindJSON - vai preencher no ponteiro de newOrder o objeto/struct com o body recebido na requisição
+	// BindJSON - preenche no ponteiro de newOrder o objeto/struct com o body recebido na requisição
 	if err := c.BindJSON(&orderData); err != nil {
 		return
 	}
 
 	fmt.Println("POST Orders - Order Data", orderData)
 	newOrder := buildOrder(orderData)
-	orders = append(orders, newOrder)
-	c.IndentedJSON(http.StatusCreated, newOrder)
+	file, _ := json.MarshalIndent(newOrder, "", " ")
+	_ = os.WriteFile("data/orders.json", file, 0644)
+	c.IndentedJSON(http.StatusCreated, newOrder.ID)
 }
 
 func main() {

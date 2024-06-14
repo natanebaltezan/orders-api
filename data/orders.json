@@ -1,8 +1,22 @@
 {
- "id": "cbdee312-b87a-4f44-8704-508c50974495",
- "product": "Chapeu",
+ "id": "e6ea6183-64df-473c-b198-e75e2f36d79d",
+ "product": "Caderno",
  "price": 49.9,
  "priority": 0,
  "status": "created",
- "timestamp": "2024-06-05T17:55:55.777882886-03:00"
+ "timestamp": "2024-06-14T11:05:42.365038318-03:00"
+}{
+ "id": "d7545992-b5a1-428e-9607-d3d7837cf2e4",
+ "product": "Caderno",
+ "price": 49.9,
+ "priority": 0,
+ "status": "created",
+ "timestamp": "2024-06-14T11:07:32.728596805-03:00"
+}{
+ "id": "f788b64b-9093-4b69-88e6-a6c68dd69217",
+ "product": "Caderno",
+ "price": 49.9,
+ "priority": 0,
+ "status": "created",
+ "timestamp": "2024-06-14T11:40:46.518096325-03:00"
 }

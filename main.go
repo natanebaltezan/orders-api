@@ -67,8 +67,21 @@ func postOrders(c *gin.Context) {
 
 	fmt.Println("POST Orders - Order Data", orderData)
 	newOrder := buildOrder(orderData)
-	file, _ := json.MarshalIndent(newOrder, "", " ")
-	_ = os.WriteFile("data/orders.json", file, 0644)
+	line, _ := json.MarshalIndent(newOrder, "", " ")
+
+	f, err := os.OpenFile("data/orders.json", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	fmt.Println("file", f)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	n, err := f.Write(append(line, ","))
+	if err != nil {
+		fmt.Println(n, err)
+	}
+	//_ = os.WriteFile("data/orders.json", file, 0644)
+
 	c.IndentedJSON(http.StatusCreated, newOrder.ID)
 }
 

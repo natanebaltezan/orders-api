@@ -69,14 +69,16 @@ func postOrders(c *gin.Context) {
 	newOrder := buildOrder(orderData)
 	line, _ := json.MarshalIndent(newOrder, "", " ")
 
-	f, err := os.OpenFile("data/orders.json", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
-	fmt.Println("file", f)
+	file, err := os.OpenFile("data/orders.json", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	defer file.Close()
+
+	fmt.Println("file", file)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	n, err := f.Write(append(line, ","))
+	n, err := file.Write(line)
 	if err != nil {
 		fmt.Println(n, err)
 	}
@@ -84,6 +86,41 @@ func postOrders(c *gin.Context) {
 
 	c.IndentedJSON(http.StatusCreated, newOrder.ID)
 }
+
+// TO DO - susbtituir escrita de arquivo para escrita em tópico
+// func publishOrderEvent(line) {
+// 	producer, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": "localhost"})
+// 	if err != nil {
+// 		fmt.Printf("Error creating Kafka producer: %v\n", err)
+// 	}
+
+// 	defer producer.Close()
+
+// 	// Delivery report handler for produced messages
+// 	go func() {
+// 		//p.Events é um canal que emite para aplicação se o evento foi escrito com sucesso ou não
+// 		for event := range producer.Events() {
+// 			switch eventType := event.(type) {
+// 			case *kafka.Message:
+// 				if eventType.TopicPartition.Error != nil {
+// 					fmt.Printf("Delivery failed: %v\n", eventType.TopicPartition)
+// 				} else {
+// 					fmt.Printf("Delivered message to %v\n", eventType.TopicPartition)
+// 				}
+// 			}
+// 		}
+// 	}()
+
+// 	// Produce messages to topic (asynchronously)
+// 	topic := "orders-origin-goapi"
+// 	producer.Produce(&kafka.Message{
+// 		TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
+// 		Value:          []byte(line),
+// 	}, nil)
+
+// 	// Wait for message deliveries before shutting down
+// 	producer.Flush(15 * 1000)
+// }
 
 func main() {
 	router := gin.Default()

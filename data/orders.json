@@ -19,4 +19,11 @@
  "priority": 0,
  "status": "created",
  "timestamp": "2024-06-14T11:40:46.518096325-03:00"
+}{
+ "id": "29bd363d-b97d-4d61-aee8-b7d1823ae5e3",
+ "product": "Caderno",
+ "price": 49.9,
+ "priority": 0,
+ "status": "created",
+ "timestamp": "2024-06-14T17:13:57.68262885-03:00"
 }

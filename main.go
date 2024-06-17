@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"reflect"
 	"time"
 
+	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
@@ -41,6 +43,9 @@ var orders = []order{
 
 // c *gin.Context - similar ao req e res
 func getOrders(c *gin.Context) {
+	// message := consumeOrderEvents()
+	// fmt.Println("Message", message)
+	// fmt.Printf("%v", reflect.TypeOf(message))
 	c.IndentedJSON(http.StatusOK, orders)
 }
 
@@ -57,6 +62,79 @@ func buildOrder(orderData order) order {
 	return orderData
 }
 
+// TO DO - susbtituir escrita de arquivo para escrita em tópico
+func publishOrderEvent(orderData order) {
+	producer, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": "localhost"})
+	if err != nil {
+		fmt.Printf("Error creating Kafka producer: %v\n", err)
+	}
+
+	defer producer.Close()
+
+	// Delivery report handler for produced messages
+	go func() {
+		//p.Events é um canal que emite para aplicação se o evento foi escrito com sucesso ou não
+		for event := range producer.Events() {
+			switch eventType := event.(type) {
+			case *kafka.Message:
+				if eventType.TopicPartition.Error != nil {
+					fmt.Printf("Delivery failed: %v\n", eventType.TopicPartition)
+				} else {
+					fmt.Printf("Delivered message to %v\n", eventType.TopicPartition)
+				}
+			}
+		}
+	}()
+
+	message, _ := json.Marshal(orderData)
+
+	// Produce messages to topic (asynchronously)
+	topic := "orders-origin-goapi"
+	producer.Produce(&kafka.Message{
+		TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
+		Value:          []byte(message),
+	}, nil)
+
+	// Wait for message deliveries before shutting down
+	producer.Flush(15 * 1000)
+}
+
+// func consumeOrderEvents() string {
+// 	consumer, err := kafka.NewConsumer(&kafka.ConfigMap{
+// 		"bootstrap.servers": "localhost",
+// 		"group.id":          "myGroup",
+// 		"auto.offset.reset": "earliest",
+// 	})
+
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// 	topic := "orders-origin-goapi"
+// 	consumer.SubscribeTopics([]string{topic, "^aRegex.*[Tt]opic"}, nil)
+
+// 	// A signal handler or similar could be used to set this to false to break the loop.
+// 	run := true
+
+// 	for run {
+// 		msg, err := consumer.ReadMessage(time.Second)
+// 		fmt.Println("Message", msg)
+
+// 		if err == nil {
+// 			fmt.Printf("Message on %s: %s\n", msg.TopicPartition, string(msg.Value))
+// 			return string(msg.Value)
+// 		} else if !err.(kafka.Error).IsTimeout() {
+// 			// The client will automatically try to recover from all errors.
+// 			// Timeout is not considered an error because it is raised by
+// 			// ReadMessage in absence of messages.
+// 			fmt.Printf("Consumer error: %v (%v)\n", err, msg)
+// 		}
+// 	}
+
+// 	consumer.Close()
+// 	// corrigir
+// 	return ""
+// }
+
 func postOrders(c *gin.Context) {
 	var orderData order
 
@@ -67,6 +145,8 @@ func postOrders(c *gin.Context) {
 
 	fmt.Println("POST Orders - Order Data", orderData)
 	newOrder := buildOrder(orderData)
+	fmt.Println(reflect.TypeOf(newOrder))
+
 	line, _ := json.MarshalIndent(newOrder, "", " ")
 
 	file, err := os.OpenFile("data/orders.json", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
@@ -84,43 +164,10 @@ func postOrders(c *gin.Context) {
 	}
 	//_ = os.WriteFile("data/orders.json", file, 0644)
 
+	publishOrderEvent(newOrder)
+
 	c.IndentedJSON(http.StatusCreated, newOrder.ID)
 }
-
-// TO DO - susbtituir escrita de arquivo para escrita em tópico
-// func publishOrderEvent(line) {
-// 	producer, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": "localhost"})
-// 	if err != nil {
-// 		fmt.Printf("Error creating Kafka producer: %v\n", err)
-// 	}
-
-// 	defer producer.Close()
-
-// 	// Delivery report handler for produced messages
-// 	go func() {
-// 		//p.Events é um canal que emite para aplicação se o evento foi escrito com sucesso ou não
-// 		for event := range producer.Events() {
-// 			switch eventType := event.(type) {
-// 			case *kafka.Message:
-// 				if eventType.TopicPartition.Error != nil {
-// 					fmt.Printf("Delivery failed: %v\n", eventType.TopicPartition)
-// 				} else {
-// 					fmt.Printf("Delivered message to %v\n", eventType.TopicPartition)
-// 				}
-// 			}
-// 		}
-// 	}()
-
-// 	// Produce messages to topic (asynchronously)
-// 	topic := "orders-origin-goapi"
-// 	producer.Produce(&kafka.Message{
-// 		TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
-// 		Value:          []byte(line),
-// 	}, nil)
-
-// 	// Wait for message deliveries before shutting down
-// 	producer.Flush(15 * 1000)
-// }
 
 func main() {
 	router := gin.Default()

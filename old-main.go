@@ -1,4 +1,4 @@
-package main
+package teste
 
 import (
 	"encoding/json"
@@ -10,19 +10,11 @@ import (
 
 	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
+	"github.com/natanebaltezan/orders-service/internal/entities"
+	"github.com/natanebaltezan/orders-service/internal/services"
 )
 
-type order struct {
-	ID        string    `json:"id"`
-	Product   string    `json:"product"`
-	Price     float64   `json:"price"`
-	Priority  int       `json:"priority"`
-	Status    string    `json:"status"`
-	Timestamp time.Time `json:"timestamp"`
-}
-
-var orders = []order{
+var orders = []entities.Order{
 	{
 		ID:        "123",
 		Product:   "Caneta",
@@ -49,21 +41,8 @@ func getOrders(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, orders)
 }
 
-func generateUUID() string {
-	id := uuid.NewString()
-	return id
-}
-
-func buildOrder(orderData order) order {
-	orderData.ID = generateUUID()
-	orderData.Status = "created"
-	orderData.Timestamp = time.Now()
-
-	return orderData
-}
-
 // TO DO - susbtituir escrita de arquivo para escrita em tópico
-func publishOrderEvent(orderData order) {
+func publishOrderEvent(orderData entities.Order) {
 	producer, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": "localhost"})
 	if err != nil {
 		fmt.Printf("Error creating Kafka producer: %v\n", err)
@@ -84,6 +63,8 @@ func publishOrderEvent(orderData order) {
 				}
 			}
 		}
+
+		fmt.Printf("fechou")
 	}()
 
 	message, _ := json.Marshal(orderData)
@@ -136,7 +117,7 @@ func publishOrderEvent(orderData order) {
 // }
 
 func postOrders(c *gin.Context) {
-	var orderData order
+	var orderData entities.Order
 
 	// BindJSON - preenche no ponteiro de newOrder o objeto/struct com o body recebido na requisição
 	if err := c.BindJSON(&orderData); err != nil {
@@ -144,7 +125,7 @@ func postOrders(c *gin.Context) {
 	}
 
 	fmt.Println("POST Orders - Order Data", orderData)
-	newOrder := buildOrder(orderData)
+	newOrder := services.BuildOrder(orderData)
 	fmt.Println(reflect.TypeOf(newOrder))
 
 	line, _ := json.MarshalIndent(newOrder, "", " ")
@@ -164,12 +145,12 @@ func postOrders(c *gin.Context) {
 	}
 	//_ = os.WriteFile("data/orders.json", file, 0644)
 
-	publishOrderEvent(newOrder)
+	// publishOrderEvent(newOrder)
 
 	c.IndentedJSON(http.StatusCreated, newOrder.ID)
 }
 
-func main() {
+func teste() {
 	router := gin.Default()
 	router.GET("/orders", getOrders)
 	router.POST("/order", postOrders)

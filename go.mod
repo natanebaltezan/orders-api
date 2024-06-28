@@ -1,4 +1,4 @@
-module example/orders-service
+module github.com/natanebaltezan/orders-service
 
 go 1.22.0
 

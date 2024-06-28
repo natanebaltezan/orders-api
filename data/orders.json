@@ -110,4 +110,116 @@
  "priority": 0,
  "status": "created",
  "timestamp": "2024-06-17T20:00:44.618284697-03:00"
+}{
+ "id": "60ef22d9-238f-440e-8fd9-f7300b237bf1",
+ "product": "Caderno",
+ "price": 49.9,
+ "priority": 0,
+ "status": "created",
+ "timestamp": "2024-06-25T21:23:49.037042781-03:00"
+}{
+ "id": "8ca9416e-937d-4ffa-a2ae-70d51f5a2747",
+ "product": "Caderno",
+ "price": 49.9,
+ "priority": 0,
+ "status": "created",
+ "timestamp": "2024-06-27T21:21:35.672138011-03:00"
+}{
+ "id": "3e36bf5c-5461-4d93-856a-aa981e821c0c",
+ "product": "Caderno",
+ "price": 49.9,
+ "priority": 0,
+ "status": "created",
+ "timestamp": "2024-06-27T22:03:36.445447977-03:00"
+}{
+ "id": "30571b18-22f3-4f9b-b373-37962b2f794b",
+ "product": "Caderno",
+ "price": 49.9,
+ "priority": 0,
+ "status": "created",
+ "timestamp": "2024-06-27T22:04:33.67847971-03:00"
+}{
+ "id": "6642ce18-ee54-47c4-aa1f-ee6704de2a3b",
+ "product": "Caderno",
+ "price": 49.9,
+ "priority": 0,
+ "status": "created",
+ "timestamp": "2024-06-27T22:39:12.631816236-03:00"
+}{
+ "id": "63ee188f-ad6d-4d07-9696-c6d8fd91903b",
+ "product": "Caderno",
+ "price": 49.9,
+ "priority": 0,
+ "status": "created",
+ "timestamp": "2024-06-27T22:46:40.844582716-03:00"
+}{
+ "id": "e7fd032c-7ad1-4978-9aa7-96739297192f",
+ "product": "Caderno",
+ "price": 49.9,
+ "priority": 0,
+ "status": "created",
+ "timestamp": "2024-06-27T23:35:18.040050113-03:00"
+}{
+ "id": "4b2b3f68-8558-4b50-8a0e-43294eb62884",
+ "product": "Caderno",
+ "price": 49.9,
+ "priority": 0,
+ "status": "created",
+ "timestamp": "2024-06-27T23:35:58.771533342-03:00"
+}{
+ "id": "c5719e17-43d9-4581-87d6-5fd96a0cd48a",
+ "product": "Caderno",
+ "price": 49.9,
+ "priority": 0,
+ "status": "created",
+ "timestamp": "2024-06-27T23:40:09.156921206-03:00"
+}{
+ "id": "2582d3c4-1886-4f54-8b67-7c071df72eb0",
+ "product": "Caderno",
+ "price": 49.9,
+ "priority": 0,
+ "status": "created",
+ "timestamp": "2024-06-27T23:42:40.136702249-03:00"
+}{
+ "id": "c45b0009-0d12-42a4-9839-7088d6eb5f88",
+ "product": "Caderno",
+ "price": 49.9,
+ "priority": 0,
+ "status": "created",
+ "timestamp": "2024-06-27T23:50:25.583678185-03:00"
+}{
+ "id": "83f962b8-6218-42a1-9c7c-1033868f3343",
+ "product": "Caderno",
+ "price": 49.9,
+ "priority": 0,
+ "status": "created",
+ "timestamp": "2024-06-28T00:01:29.618664984-03:00"
+}{
+ "id": "3debaa21-407c-4a42-b4a9-526a7325fd15",
+ "product": "kafka teste",
+ "price": 49.9,
+ "priority": 0,
+ "status": "created",
+ "timestamp": "2024-06-28T00:02:15.07044471-03:00"
+}{
+ "id": "87c3677f-e1e5-43a8-a75f-1d542c1bbefd",
+ "product": "kafka teste",
+ "price": 49.9,
+ "priority": 0,
+ "status": "created",
+ "timestamp": "2024-06-28T00:03:24.884355594-03:00"
+}{
+ "id": "e4d5976a-7ea5-499d-b678-e85706fb5021",
+ "product": "kafka teste",
+ "price": 49.9,
+ "priority": 0,
+ "status": "created",
+ "timestamp": "2024-06-28T00:03:40.67109563-03:00"
+}{
+ "id": "de6d1f9e-328c-45e6-866c-f2a28ea4b445",
+ "product": "kafka teste",
+ "price": 49.9,
+ "priority": 0,
+ "status": "created",
+ "timestamp": "2024-06-28T00:07:57.425522235-03:00"
 }
